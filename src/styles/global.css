@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+    --primary: 158 76% 64%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 158 76% 64%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 158 76% 64%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 158 76% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-poppins;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer components {
+  /* Custom button styles */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 hover:bg-gray-200 text-text-heading font-medium px-6 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  /* Status badges */
+  .status-pending {
+    @apply bg-status-pending/10 text-status-pending border border-status-pending/20;
+  }
+
+  .status-inprogress {
+    @apply bg-status-inprogress/10 text-status-inprogress border border-status-inprogress/20;
+  }
+
+  .status-done {
+    @apply bg-status-done/10 text-status-done border border-status-done/20;
+  }
+
+  /* Card styles */
+  .task-card {
+    @apply bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  /* Form styles */
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-200;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-text-heading mb-2;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+}

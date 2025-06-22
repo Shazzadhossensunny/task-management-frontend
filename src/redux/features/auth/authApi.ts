@@ -1,0 +1,161 @@
+import { baseApi } from "../../api/baseApi";
+import type { UserProfile } from "./authSlice";
+
+// Request/Response types
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: UserProfile;
+    accessToken: string;
+  };
+}
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: UserProfile;
+    accessToken: string;
+  };
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+  resetToken: string;
+}
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data?: T;
+}
+
+const authApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    // Login user
+    login: builder.mutation<LoginResponse, LoginRequest>({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    // Register user
+    register: builder.mutation<RegisterResponse, RegisterRequest>({
+      query: (userData) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: userData,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    // Forgot password
+    forgotPassword: builder.mutation<ApiResponse, ForgotPasswordRequest>({
+      query: (data) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Reset password
+    resetPassword: builder.mutation<ApiResponse, ResetPasswordRequest>({
+      query: (data) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Change password
+    changePassword: builder.mutation<ApiResponse, ChangePasswordRequest>({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    // Get user profile
+    getProfile: builder.query<{ success: boolean; data: UserProfile }, void>({
+      query: () => "/auth/profile",
+      providesTags: ["User"],
+    }),
+
+    // Update user profile
+    updateProfile: builder.mutation<
+      { success: boolean; data: UserProfile },
+      Partial<Pick<UserProfile, "name" | "email">>
+    >({
+      query: (data) => ({
+        url: "/auth/profile",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    // Logout user
+    logout: builder.mutation<ApiResponse, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      invalidatesTags: ["User", "Task"],
+    }),
+
+    // Refresh token
+    refreshToken: builder.mutation<
+      { success: boolean; data: { accessToken: string } },
+      void
+    >({
+      query: () => ({
+        url: "/auth/refresh-token",
+        method: "POST",
+      }),
+    }),
+  }),
+});
+
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useChangePasswordMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useLogoutMutation,
+  useRefreshTokenMutation,
+} = authApi;
+
+export default authApi;
