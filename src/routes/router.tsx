@@ -5,6 +5,7 @@ import Dashboard from "../root/Dashboard";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Tasks from "../pages/dashboard/task/Tasks";
+import TaskDetailPage from "../pages/dashboard/task/TaskDetails";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "tasks",
         element: <Tasks />,
+      },
+      {
+        path: "tasks/:id",
+        element: <TaskDetailPage />,
       },
       // {
       //   path: "profile",
