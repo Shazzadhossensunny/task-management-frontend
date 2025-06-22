@@ -2,9 +2,9 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../root/Dashboard";
-import DashboardHome from "../pages/dashboard/DashboardHome";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
+import Tasks from "../pages/dashboard/task/Tasks";
 
 const router = createBrowserRouter([
   {
@@ -15,15 +15,15 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
-      {
-        index: true,
-        element: <DashboardHome />,
-      },
-      // Add more dashboard routes here as needed
       // {
-      //   path: "tasks",
-      //   element: <Tasks />,
+      //   index: true,
+      //   element: <DashboardHome />,
       // },
+      // Add more dashboard routes here as needed
+      {
+        path: "tasks",
+        element: <Tasks />,
+      },
       // {
       //   path: "profile",
       //   element: <Profile />,

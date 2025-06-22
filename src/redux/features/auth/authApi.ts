@@ -25,6 +25,7 @@ export interface RegisterRequest {
 
 export interface RegisterResponse {
   success: boolean;
+  error: string;
   message: string;
   data: {
     user: UserProfile;
@@ -64,17 +65,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      invalidatesTags: ["User"],
-    }),
-
-    // Register user
-    register: builder.mutation<RegisterResponse, RegisterRequest>({
-      query: (userData) => ({
-        url: "/auth/register",
-        method: "POST",
-        body: userData,
-      }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["Users"],
     }),
 
     // Forgot password
@@ -102,13 +93,13 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["Users"],
     }),
 
     // Get user profile
     getProfile: builder.query<{ success: boolean; data: UserProfile }, void>({
       query: () => "/auth/profile",
-      providesTags: ["User"],
+      providesTags: ["Users"],
     }),
 
     // Update user profile
@@ -121,7 +112,7 @@ const authApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["Users"],
     }),
 
     // Logout user
@@ -130,7 +121,7 @@ const authApi = baseApi.injectEndpoints({
         url: "/auth/logout",
         method: "POST",
       }),
-      invalidatesTags: ["User", "Task"],
+      invalidatesTags: ["Users", "Task"],
     }),
 
     // Refresh token
@@ -148,7 +139,6 @@ const authApi = baseApi.injectEndpoints({
 
 export const {
   useLoginMutation,
-  useRegisterMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,

@@ -2,8 +2,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+
+import { toast } from "sonner";
+import { useRegisterUserMutation } from "../redux/features/user/userApi";
 
 const signupSchema = z
   .object({
@@ -24,18 +27,39 @@ type SignupFormInputs = z.infer<typeof signupSchema>;
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignupFormInputs>({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = (data: SignupFormInputs) => {
+  const onSubmit = async (data: SignupFormInputs) => {
     console.log("Form Data:", data);
     // handle signup here
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
+    try {
+      const result = await registerUser(userInfo).unwrap();
+      if (result.error) {
+        toast.error(result.message);
+      } else {
+        toast.success("User registration successfully!");
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+    reset();
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);

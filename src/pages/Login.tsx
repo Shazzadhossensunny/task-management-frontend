@@ -1,7 +1,13 @@
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../redux/features/auth/authApi";
+import { verifyToken } from "../utils/verifyToken";
+import type { TUser } from "../type/global.type";
+import { useAppDispatch } from "../redux/hooks";
+import { setUser } from "../redux/features/auth/authSlice";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -13,17 +19,39 @@ const loginSchema = z.object({
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from || "/";
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log("Form Data:", data);
-    // handle login here
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    try {
+      const result = await login(userInfo).unwrap();
+      const { userId, email, role } = verifyToken(
+        result.data.accessToken
+      ) as TUser;
+      const user = { userId, role };
+
+      dispatch(setUser({ user, email, token: result.data.accessToken }));
+      toast.success("Logged in successfully!");
+      navigate(from, { replace: true });
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+    reset();
   };
 
   return (
