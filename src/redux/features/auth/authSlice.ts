@@ -23,6 +23,7 @@ export interface UserProfile {
 // Auth state type
 export interface TAuth {
   user: UserProfile | null;
+  email: null | string;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -30,6 +31,7 @@ export interface TAuth {
 
 const initialState: TAuth = {
   user: null,
+  email: null,
   token: null,
   isAuthenticated: false,
   isLoading: false,
@@ -39,13 +41,12 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (
-      state,
-      action: PayloadAction<{ user: UserProfile; token: string }>
-    ) => {
-      const { user, token } = action.payload;
+    setUser: (state, action) => {
+      console.log(state, action);
+      const { user, email, token } = action.payload;
       state.token = token;
       state.user = user;
+      state.email = email;
       state.isAuthenticated = true;
       state.isLoading = false;
     },
@@ -65,6 +66,7 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.email = null;
       state.isAuthenticated = false;
       state.isLoading = false;
     },

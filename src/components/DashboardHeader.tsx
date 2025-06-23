@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Clock,
   List,
@@ -9,22 +9,28 @@ import {
   Settings,
 } from "lucide-react";
 import { useState } from "react";
-
-const mockUser = {
-  name: "Thomas",
-  email: "thomas@example.com",
-};
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+import { toast } from "sonner";
+import { useGetSingleUserProfileQuery } from "../redux/features/user/userApi";
 
 export default function DashboardHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const user = mockUser; // Replace with Redux user if needed
+  // const user = useAppSelector(selectCurrentUser);
+  // console.log(user);
+  const { data: user } = useGetSingleUserProfileQuery(undefined);
+  console.log("current", user);
 
   const handleLogout = () => {
-    // TODO: Replace with Redux or actual logout logic
+    dispatch(logout());
     console.log("Logging out...");
     setIsDropdownOpen(false);
+    toast.success("Logged out successfully!");
+    navigate("/");
   };
 
   const isActive = (path: string) =>
@@ -91,11 +97,11 @@ export default function DashboardHeader() {
           >
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">
-                {user?.name?.charAt(0).toUpperCase() || "U"}
+                {user?.data?.name?.charAt(0).toUpperCase() || "U"}
               </span>
             </div>
             <span className="hidden sm:block text-sm font-medium">
-              {user?.name || "User"}
+              {user?.data?.name || "User"}
             </span>
             <ChevronDown className="w-4 h-4" />
           </button>
@@ -105,7 +111,7 @@ export default function DashboardHeader() {
               <div className="px-4 py-2 text-xs text-gray-500 border-b">
                 Signed in as
                 <div className="font-medium text-gray-900 truncate">
-                  {user?.email}
+                  {user?.data?.email}
                 </div>
               </div>
               <button
@@ -134,7 +140,9 @@ export default function DashboardHeader() {
 
       {/* Welcome Text (Optional) */}
       <div className="absolute bottom-8 left-8 z-10">
-        <h2 className="text-white text-lg opacity-90 mb-2">Hi {user?.name}</h2>
+        <h2 className="text-white text-lg opacity-90 mb-2">
+          Hi {user?.data?.name.toUpperCase()}
+        </h2>
         <h1 className="text-white text-3xl font-bold">Welcome to Dashboard</h1>
       </div>
     </div>

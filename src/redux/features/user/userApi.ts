@@ -3,6 +3,14 @@ import type { RegisterRequest, RegisterResponse } from "../auth/authApi";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getSingleUserProfile: builder.query({
+      query: () => ({
+        url: `/users/profile`,
+        method: "GET",
+      }),
+      providesTags: ["Users"],
+    }),
+
     registerUser: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (data) => ({
         url: `/users/register`,
@@ -14,4 +22,5 @@ const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useRegisterUserMutation } = userApi;
+export const { useRegisterUserMutation, useGetSingleUserProfileQuery } =
+  userApi;
