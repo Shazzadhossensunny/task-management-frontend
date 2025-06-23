@@ -40,7 +40,6 @@ export default function Signup() {
   });
 
   const onSubmit = async (data: SignupFormInputs) => {
-    console.log("Form Data:", data);
     // handle signup here
     const userInfo = {
       name: data.name,

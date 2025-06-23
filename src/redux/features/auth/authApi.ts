@@ -116,13 +116,13 @@ const authApi = baseApi.injectEndpoints({
     }),
 
     // Logout user
-    logout: builder.mutation<ApiResponse, void>({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
-      invalidatesTags: ["Users", "Task"],
-    }),
+    // logout: builder.mutation<ApiResponse, void>({
+    //   query: () => ({
+    //     url: "/auth/logout",
+    //     method: "POST",
+    //   }),
+    //   invalidatesTags: ["Users", "Task"],
+    // }),
 
     // Refresh token
     refreshToken: builder.mutation<
@@ -144,7 +144,6 @@ export const {
   useChangePasswordMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
-  useLogoutMutation,
   useRefreshTokenMutation,
 } = authApi;
 

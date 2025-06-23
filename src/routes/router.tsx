@@ -16,11 +16,6 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
-      // {
-      //   index: true,
-      //   element: <DashboardHome />,
-      // },
-      // Add more dashboard routes here as needed
       {
         path: "tasks",
         element: <Tasks />,

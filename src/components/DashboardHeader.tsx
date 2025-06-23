@@ -9,8 +9,8 @@ import {
   Settings,
 } from "lucide-react";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useAppDispatch } from "../redux/hooks";
+import { logout } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { useGetSingleUserProfileQuery } from "../redux/features/user/userApi";
 
@@ -23,7 +23,7 @@ export default function DashboardHeader() {
   // const user = useAppSelector(selectCurrentUser);
   // console.log(user);
   const { data: user } = useGetSingleUserProfileQuery(undefined);
-  console.log("current", user);
+  // console.log("current", user);
 
   const handleLogout = () => {
     dispatch(logout());
