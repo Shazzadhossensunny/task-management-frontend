@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useResetPasswordMutation } from "../redux/features/auth/authApi";

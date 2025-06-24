@@ -19,7 +19,7 @@ const loginSchema = z.object({
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();

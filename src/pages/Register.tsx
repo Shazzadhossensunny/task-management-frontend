@@ -27,7 +27,7 @@ type SignupFormInputs = z.infer<typeof signupSchema>;
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [registerUser, { isLoading }] = useRegisterUserMutation();
+  const [registerUser] = useRegisterUserMutation();
   const navigate = useNavigate();
 
   const {

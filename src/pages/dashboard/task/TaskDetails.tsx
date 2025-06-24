@@ -69,7 +69,6 @@ export default function TaskDetailPage() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm();
 

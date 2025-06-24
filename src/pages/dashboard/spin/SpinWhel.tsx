@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronDown, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSpinWheelMutation } from "../../../redux/features/spin/spinApi";
@@ -49,7 +49,7 @@ const SpinWheel = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const [spinWheel, { isLoading }] = useSpinWheelMutation();
+  const [spinWheel] = useSpinWheelMutation();
   const handleCategoryChange = (category: TCategory) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -172,7 +172,7 @@ const SpinWheel = () => {
                 }}
               >
                 {/* Category Labels */}
-                {WHEEL_SEGMENTS.map((segment, index) => {
+                {WHEEL_SEGMENTS.map((segment) => {
                   const radius = 100; // Distance from center to middle of slice
                   const angleRad = (segment.angle + 55) * (Math.PI / 180); // +30 to center text in segment
 

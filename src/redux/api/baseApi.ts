@@ -15,7 +15,8 @@ interface ErrorResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api",
+  // baseUrl: "http://localhost:5000/api",
+  baseUrl: "https://task-management-backend-alpha.vercel.app/api",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth?.token;
@@ -46,7 +47,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         // Try refreshing token
         try {
           const res = await fetch(
-            "http://localhost:5000/api/auth/refresh-token",
+            "https://task-management-backend-alpha.vercel.app/api/auth/refresh-token",
             {
               method: "POST",
               credentials: "include",
