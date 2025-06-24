@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Link } from "react-router-dom";
+import { useForgotPasswordMutation } from "../redux/features/auth/authApi";
+import { toast } from "sonner";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -18,10 +20,15 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = (data: ForgotPasswordFormInputs) => {
-    console.log("Form Data:", data);
-    // Handle password reset here
-    return new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+  const [forgotPassword] = useForgotPasswordMutation();
+
+  const onSubmit = async (data: ForgotPasswordFormInputs) => {
+    try {
+      const res = await forgotPassword({ email: data.email }).unwrap();
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to send reset link.");
+    }
   };
 
   return (

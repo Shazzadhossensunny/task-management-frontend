@@ -41,7 +41,7 @@ export interface ResetPasswordRequest {
   email: string;
   newPassword: string;
   confirmPassword: string;
-  resetToken: string;
+  token: string;
 }
 
 export interface ChangePasswordRequest {
@@ -73,16 +73,19 @@ const authApi = baseApi.injectEndpoints({
       query: (data) => ({
         url: "/auth/forgot-password",
         method: "POST",
-        body: data,
+        body: { email: data.email },
       }),
     }),
 
     // Reset password
-    resetPassword: builder.mutation<ApiResponse, ResetPasswordRequest>({
+    resetPassword: builder.mutation({
       query: (data) => ({
         url: "/auth/reset-password",
         method: "POST",
-        body: data,
+        params: { token: data.token }, // Send token as query param
+        body: {
+          newPassword: data.newPassword,
+        },
       }),
     }),
 

@@ -1,90 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
-
-type FormData = {
-  password: string;
-  confirmPassword: string;
-};
-
-type FormErrors = {
-  password?: string;
-  confirmPassword?: string;
-};
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useResetPasswordMutation } from "../redux/features/auth/authApi";
+import { toast } from "sonner";
 
 export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<{
+    password?: string;
+    confirmPassword?: string;
+  }>({});
+  const [resetPassword] = useResetPasswordMutation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+  // Extract token and email from URL
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token") || "";
 
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
+  // Validate form
+  const validateForm = () => {
+    const newErrors: { password?: string; confirmPassword?: string } = {};
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
+    if (!password) newErrors.password = "Password is required";
+    else if (password.length < 6)
+      newErrors.password = "At least 6 characters required";
+
+    if (!confirmPassword)
+      newErrors.confirmPassword = "Confirm password required";
+    else if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-
-    if (errors[field]) {
-      setErrors((prev) => ({
-        ...prev,
-        [field]: undefined,
-      }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate form
     if (!validateForm()) return;
 
-    setIsLoading(true);
-
     try {
-      // TODO: Replace with Redux Toolkit/RTK Query API call here:
-      // await resetPasswordMutation({ email: "m32220@gmail.com", password: formData.password });
+      // Call reset password API
+      await resetPassword({
+        newPassword: password,
+        token,
+      }).unwrap();
 
-      console.log("Password Reset Data:", formData);
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      alert("Password reset successfully!");
-    } catch (error) {
-      console.error("Reset password error:", error);
-      alert("Failed to reset password. Please try again.");
-    } finally {
-      setIsLoading(false);
+      toast.success("Password reset successfully!");
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Password reset failed");
     }
   };
-
-  const handleBackToLogin = () => {
-    // Future navigation handling (react-router)
-    console.log("Navigate to login");
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Banner */}
@@ -92,10 +64,9 @@ export default function ResetPassword() {
         className="w-full relative"
         style={{
           height: "174px",
-          background:
-            "linear-gradient(-102deg, #60E5AE 3.72%, #60E5AE 3.72%, #040612 80.82%)",
+          background: "linear-gradient(-102deg, #60E5AE 3.72%, #040612 80.82%)",
           borderBottom: "1px solid #E4E4E4",
-          backdropFilter: "blur(150px)", // blur was missing here
+          backdropFilter: "blur(150px)",
         }}
       >
         <div className="absolute inset-0 overflow-hidden">
@@ -116,15 +87,14 @@ export default function ResetPassword() {
         style={{
           borderRadius: "15px",
           boxShadow:
-            "0px 1px 3px 0px rgba(0, 0, 0, 0.12), 0px 23px 44px 0px rgba(176, 183, 195, 0.14)",
+            "0px 1px 3px rgba(0,0,0,0.12), 0px 23px 44px rgba(176,183,195,0.14)",
           maxWidth: "500px",
         }}
       >
-        {/* Lock Icon */}
         <div
           className="w-20 h-20 mx-auto flex items-center justify-center rounded-3xl bg-white mb-4"
           style={{
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
           }}
         >
           <div
@@ -138,49 +108,28 @@ export default function ResetPassword() {
           </div>
         </div>
 
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Reset your Password
           </h1>
           <p className="text-gray-600 text-sm">
-            Strong passwords include numbers, letters, and punctuation marks.
+            Enter a strong password below.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email (Read-only) */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
-            <div
-              className="p-3 rounded-md border bg-gray-50 text-gray-700"
-              style={{
-                borderColor: "#E1E1E1",
-                boxShadow: "0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              m32220@gmail.com
-            </div>
-          </div>
-
           {/* Password Field */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Enter New Password
+              New Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your new password"
-                value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-                className="w-full p-3 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                style={{
-                  borderColor: errors.password ? "#EF4444" : "#E1E1E1",
-                  boxShadow: "0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
-                }}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter new password"
+                className="w-full p-3 rounded-md border bg-white"
               />
               <button
                 type="button"
@@ -203,16 +152,10 @@ export default function ResetPassword() {
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Retype password"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  handleInputChange("confirmPassword", e.target.value)
-                }
-                className="w-full p-3 rounded-md border bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                style={{
-                  borderColor: errors.confirmPassword ? "#EF4444" : "#E1E1E1",
-                  boxShadow: "0px 1px 3px 0px rgba(0, 0, 0, 0.12)",
-                }}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="w-full p-3 rounded-md border bg-white"
               />
               <button
                 type="button"
@@ -229,39 +172,19 @@ export default function ResetPassword() {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full py-3 px-4 rounded-md text-white font-medium shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50"
-            style={{
-              background:
-                "linear-gradient(102deg, #05E389 3.72%, #009A62 80.82%)",
-            }}
+            className="w-full py-3 px-4 rounded-md text-white font-medium bg-green-500 hover:bg-green-600"
           >
-            {isLoading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Resetting Password...
-              </div>
-            ) : (
-              "Reset Password"
-            )}
+            Reset Password
           </button>
-
-          {/* Back to Login */}
-          <div className="text-center pt-4">
-            <Link to={"/login"}>
-              <button
-                type="button"
-                onClick={handleBackToLogin}
-                className="text-green-500 hover:text-green-600 font-medium hover:underline transition-colors duration-200"
-              >
-                Back to Login
-              </button>
-            </Link>
-          </div>
         </form>
+
+        <div className="text-center pt-4">
+          <Link to="/login" className="text-green-500 hover:underline">
+            Back to Login
+          </Link>
+        </div>
       </div>
     </div>
   );

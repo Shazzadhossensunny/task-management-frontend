@@ -6,6 +6,8 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Tasks from "../pages/dashboard/task/Tasks";
 import TaskDetailPage from "../pages/dashboard/task/TaskDetails";
+import SpinWheel from "../pages/dashboard/spin/SpinWhel";
+import NotFoundPage from "../pages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
         path: "tasks/:id",
         element: <TaskDetailPage />,
       },
+      {
+        path: "spin",
+        element: <SpinWheel />,
+      },
       // {
       //   path: "profile",
       //   element: <Profile />,
@@ -39,12 +45,20 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
+    path: "/auth/reset-password",
+    element: <ResetPassword />,
+  },
+  {
     path: "/forgot-password",
     element: <ForgotPassword />,
   },
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 

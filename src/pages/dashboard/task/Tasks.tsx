@@ -179,7 +179,7 @@ export default function TaskListPage() {
               <div className="relative">
                 <button
                   onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                  className="flex items-center justify-between w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50"
+                  className="flex items-center justify-between w-full sm:w-52 px-4 py-2 border border-gray-300 rounded-lg bg-white hover:bg-gray-50"
                 >
                   <span className="text-gray-600 text-sm">
                     {selectedCategories.length === 0
@@ -305,9 +305,11 @@ export default function TaskListPage() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                    {task.description}
-                  </p>
+                  <div className="pl-14 sm:pl-11">
+                    <p className="text-gray-600 text-sm sm:text-base mb-4 line-clamp-2">
+                      {task.description}
+                    </p>
+                  </div>
 
                   {/* Footer */}
                   <div className="flex items-center justify-between">
@@ -328,13 +330,13 @@ export default function TaskListPage() {
                       </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs sm:text-sm text-gray-600">
-                        {getStatusDisplayName(task.status)}
-                      </span>
                       <span
                         className="w-2 h-2 rounded-full"
                         style={{ backgroundColor: getStatusColor(task.status) }}
                       ></span>
+                      <span className="text-xs sm:text-sm text-gray-600">
+                        {getStatusDisplayName(task.status)}
+                      </span>
                     </div>
                   </div>
                 </div>

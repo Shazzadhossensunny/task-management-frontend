@@ -128,14 +128,6 @@ export default function TaskDetailPage() {
   };
 
   const handleStatusUpdate = async () => {
-    console.log("Current status:", currentStatus);
-    console.log("Task ID:", task._id);
-    const payload = {
-      id: task._id,
-      status: currentStatus,
-    };
-
-    console.log("Payload being sent:", payload);
     try {
       if (currentStatus === "done") {
         const updateData = {
@@ -143,7 +135,7 @@ export default function TaskDetailPage() {
           status: currentStatus,
           points: task.points || 10,
         };
-        console.log("Payload for done status:", updateData);
+
         await updateTaskStatus(updateData).unwrap();
         setPoints(task.points || 10);
         setShowCongratsModal(true);
@@ -252,24 +244,18 @@ export default function TaskDetailPage() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
             <h1 className="text-xl sm:text-2xl font-semibold text-[#1F1F1F]">
-              Task Detail
+              Task Details
             </h1>
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto">
               {/* Points Display */}
               {isDone && points > 0 && (
                 <div className="order-first sm:order-none">
-                  <p className="text-base sm:text-lg font-bold text-green-600">
+                  <p className="text-base sm:text-lg font-bold text-[#C716F3]">
                     Points: {points}
                   </p>
                 </div>
               )}
-              <Button
-                variant="outline"
-                className="border border-[#FFAB00] text-[#FFAB00] bg-[rgba(255,171,0,0.1)] rounded-lg px-4 py-2 hover:bg-[rgba(255,171,0,0.2)]"
-                onClick={() => navigate(-1)}
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back
-              </Button>
+
               {!isDone && (
                 <Button
                   variant="outline"
@@ -279,6 +265,13 @@ export default function TaskDetailPage() {
                   <Edit className="w-4 h-4 mr-2" /> Edit Task
                 </Button>
               )}
+              <Button
+                variant="outline"
+                className=" text-black bg-[#60E5AE] rounded-lg px-4 py-2 hover:bg-[rgba(255,171,0,0.2)]"
+                onClick={() => navigate("/dashboard/tasks")}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" /> Back
+              </Button>
             </div>
           </div>
 
@@ -289,7 +282,7 @@ export default function TaskDetailPage() {
           <div className="space-y-6">
             {/* Title and Icon */}
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#60E5AE] rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 md:w-14 md:h-14 bg-[#60E5AE] rounded-full flex items-center justify-center flex-shrink-0">
                 <div
                   className="w-5 h-5 sm:w-6 sm:h-6 bg-center bg-no-repeat"
                   style={{
@@ -312,7 +305,7 @@ export default function TaskDetailPage() {
             {/* Date and Status Row */}
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 pl-14 sm:pl-16">
               {/* Date Section */}
-              <div className="flex-1 space-y-2">
+              <div className="space-y-2">
                 <p className="text-sm font-medium text-gray-700">End Date</p>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-gray-500 flex-shrink-0" />
@@ -323,20 +316,18 @@ export default function TaskDetailPage() {
               </div>
 
               {/* Vertical Divider - Hidden on mobile */}
-              <div className="hidden sm:block w-px bg-gray-200 h-12"></div>
+              <div className="hidden sm:block w-[2px] bg-gray-200 h-12"></div>
 
               {/* Status Display Section */}
               <div className="flex-1 space-y-2">
-                <p className="text-sm font-medium text-gray-700">
-                  Current Status
-                </p>
+                <p className="text-sm font-medium text-gray-700"></p>
                 <div className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: getStatusColor(currentStatus) }}
                   ></div>
                   <span
-                    className="text-sm font-medium"
+                    className="text-xl font-medium"
                     style={{ color: getStatusColor(currentStatus) }}
                   >
                     {getStatusDisplayName(currentStatus)}
@@ -350,7 +341,7 @@ export default function TaskDetailPage() {
               <div className="pl-14 sm:pl-16">
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-700">
-                    Update Status
+                    Change Status
                   </p>
                   <select
                     className="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -381,11 +372,11 @@ export default function TaskDetailPage() {
                     {isDeleting ? "Deleting..." : "Delete Task"}
                   </Button>
                   <Button
-                    className="bg-[#60E5AE] text-white px-4 py-2 hover:bg-[#50d49e]"
+                    className="bg-[#60E5AE] text-black px-4 py-2 hover:bg-[#50d49e]"
                     onClick={handleStatusUpdate}
                     disabled={isUpdatingStatus}
                   >
-                    {isUpdatingStatus ? "Updating..." : "Update Status"}
+                    {isUpdatingStatus ? "Updating..." : "Submit"}
                   </Button>
                 </>
               )}
@@ -533,7 +524,7 @@ export default function TaskDetailPage() {
           </DialogHeader>
           <div className="py-4">
             <img
-              src="/public/images/congratilation.png"
+              src="/images/congratilation.png"
               alt="Congratulations"
               className="mx-auto w-24 h-24 sm:w-32 sm:h-32 mb-4"
             />
@@ -557,7 +548,7 @@ export default function TaskDetailPage() {
           </DialogHeader>
           <div className="py-4">
             <img
-              src="/public/images/delete.png"
+              src="/images/delete.png"
               alt="Delete confirmation"
               className="mx-auto w-24 h-24 sm:w-32 sm:h-32 mb-4"
             />

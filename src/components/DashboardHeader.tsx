@@ -58,7 +58,7 @@ export default function DashboardHeader() {
       <div className="flex items-center justify-between px-4 py-3 absolute top-0 left-0 right-0 z-10">
         {/* Left: Logo */}
         <Link
-          to="/dashboard/tasks"
+          to="/dashboard"
           className="flex items-center space-x-2 cursor-pointer"
         >
           <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
@@ -101,7 +101,7 @@ export default function DashboardHeader() {
               </span>
             </div>
             <span className="hidden sm:block text-sm font-medium">
-              {user?.data?.name || "User"}
+              {user?.data?.name.toUpperCase() || "User"}
             </span>
             <ChevronDown className="w-4 h-4" />
           </button>
