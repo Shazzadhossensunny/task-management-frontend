@@ -8,6 +8,8 @@ import Tasks from "../pages/dashboard/task/Tasks";
 import TaskDetailPage from "../pages/dashboard/task/TaskDetails";
 import SpinWheel from "../pages/dashboard/spin/SpinWhel";
 import NotFoundPage from "../pages/NotFound";
+import { ProtectedRoute } from "../components/layout/ProtectedRoute";
+import { USER_ROLE } from "../constants/user";
 
 const router = createBrowserRouter([
   {
@@ -16,19 +18,36 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+
+    element: (
+      <ProtectedRoute role={[USER_ROLE.user]}>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "tasks",
-        element: <Tasks />,
+        element: (
+          <ProtectedRoute role={[USER_ROLE.user]}>
+            <Tasks />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "tasks/:id",
-        element: <TaskDetailPage />,
+        element: (
+          <ProtectedRoute role={[USER_ROLE.user]}>
+            <TaskDetailPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "spin",
-        element: <SpinWheel />,
+        element: (
+          <ProtectedRoute role={[USER_ROLE.user]}>
+            <SpinWheel />
+          </ProtectedRoute>
+        ),
       },
       // {
       //   path: "profile",
